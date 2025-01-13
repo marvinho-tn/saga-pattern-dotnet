@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
@@ -10,7 +10,7 @@ public static class PaymentService
     
     public interface IService
     {
-        [HttpPost("payments")]
+        [Post("/payments")]
         Task<Response?> ProcessAsync(Request request, CancellationToken ct);
     }
 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
@@ -10,10 +10,10 @@ public static class InventoryService
     
     public interface IService
     {
-        [HttpPost("inventory/reserve")]
+        [Post("/inventory/reserve")]
         public Task<Response?> ReserveAsync(Request req, CancellationToken ct);
         
-        [HttpPost("inventory/release")]
+        [Post("/inventory/release")]
         public Task<Response?> ReleaseAsync(Request req, CancellationToken ct);
     }
 }

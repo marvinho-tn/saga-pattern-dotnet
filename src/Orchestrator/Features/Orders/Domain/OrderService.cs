@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
@@ -14,10 +14,10 @@ public static class OrderService
 
     public interface IService
     {
-        [HttpPost("orders")]
+        [Post("/orders")]
         Task<Response?> CreateAsync(Request req, CancellationToken ct);
         
-        [HttpDelete("orders/{id}")]
+        [Delete("/orders/{id}")]
         Task<Response?> CancelAsync(int id, CancellationToken ct);
     }
 }
