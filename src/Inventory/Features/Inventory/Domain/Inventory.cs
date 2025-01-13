@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Inventory.Features.Inventory.Domain;
 
-internal class Inventory
+internal sealed class Inventory
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

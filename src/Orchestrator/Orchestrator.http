@@ -3,7 +3,6 @@ POST {{base_url}}/saga/orders
 Content-Type: application/json
 
 {
-  "id": 1,
-  "productId": "P0001",
+  "productId": "P12345",
   "quantity": 10
 }

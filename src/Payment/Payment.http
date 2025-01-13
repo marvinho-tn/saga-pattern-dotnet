@@ -1,6 +1,8 @@
-@Payment_HostAddress = http://localhost:5257
+### Process Payment
+POST {{base_url}}/payments
+Content-Type: application/json
 
-GET {{Payment_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+{
+  "OrderId": "1234567890abcdef12345678",
+  "Amount": 100
+}
