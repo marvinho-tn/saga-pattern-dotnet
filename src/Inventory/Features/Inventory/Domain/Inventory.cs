@@ -1,9 +1,9 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Order.Features.Order.Domain;
+namespace Inventory.Features.Inventory.Domain;
 
-internal sealed class Order
+internal class Inventory
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -11,7 +11,5 @@ internal sealed class Order
     
     public required string ProductId { get; set; }
     
-    public required int Quantity { get; set; }
-    
-    public required string Status { get; set; }
+    public required int Stock { get; set; }
 }

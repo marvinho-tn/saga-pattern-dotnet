@@ -1,6 +1,8 @@
-@Inventory_HostAddress = http://localhost:5147
+### Reserve Inventory Item
+POST {{base_url}}/inventory/reserve
+Content-Type: application/json
 
-GET {{Inventory_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+{
+  "ProductId": "P12345",
+  "Quantity": 10
+}
