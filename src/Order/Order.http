@@ -1,3 +1,4 @@
+### Create Order
 POST {{base_url}}/orders
 Content-Type: application/json
 
@@ -6,5 +7,8 @@ Content-Type: application/json
   "Quantity": 1
 }
 
-###
-DELETE {{base_url}}/orders/67855b37232520a233588bf3
+### Cancel Order
+DELETE {{base_url}}/orders/67855df7ff5ae14f688ad10f
+
+### Get Order by Id
+GET {{base_url}}/orders/67855df7ff5ae14f688ad10f

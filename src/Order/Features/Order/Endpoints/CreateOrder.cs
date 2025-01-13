@@ -42,7 +42,7 @@ internal static class CreateOrder
             
             await ordersCollection.InsertOneAsync(order, cancellationToken: ct);
             
-            var response = new Response(order.Id);
+            var response = new Response(order.Id!);
             
             await SendAsync(response, 201, ct);
         }

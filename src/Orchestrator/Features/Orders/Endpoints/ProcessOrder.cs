@@ -80,7 +80,7 @@ internal static class ProcessOrder
             
             var endpointResponse = new Response(null, orderEndpointResponse);
             
-            await SendAsync(endpointResponse, 200, ct);
+            await SendOkAsync(endpointResponse, ct);
         }
     }
 }
