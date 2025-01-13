@@ -5,3 +5,6 @@ Content-Type: application/json
   "ProductId": "P001",
   "Quantity": 1
 }
+
+###
+DELETE {{base_url}}/orders/67855b37232520a233588bf3
