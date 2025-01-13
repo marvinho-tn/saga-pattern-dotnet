@@ -1,6 +1,7 @@
-@Order_HostAddress = http://localhost:5144
+POST {{base_url}}/orders
+Content-Type: application/json
 
-GET {{Order_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+{
+  "ProductId": "P001",
+  "Quantity": 1
+}

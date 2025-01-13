@@ -6,7 +6,7 @@ public static class PaymentService
 {
     public record Response();
     
-    public record Request(int OrderId, int Amount);
+    public record Request(string OrderId, int Amount);
     
     public interface IService
     {

@@ -4,13 +4,11 @@ namespace Orchestrator.Features.Orders.Domain;
 
 public static class OrderService
 {
-    public record Response();
+    public record Response(string Id);
     
     public record Request(
-        int Id,
         string ProductId,
-        int Quantity,
-        string Status);
+        int Quantity);
 
     public interface IService
     {
@@ -18,6 +16,6 @@ public static class OrderService
         Task<Response?> CreateAsync(Request req, CancellationToken ct);
         
         [Delete("/orders/{id}")]
-        Task<Response?> CancelAsync(int id, CancellationToken ct);
+        Task<Response?> CancelAsync(string id, CancellationToken ct);
     }
 }

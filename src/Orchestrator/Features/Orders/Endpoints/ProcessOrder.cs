@@ -7,25 +7,19 @@ namespace Orchestrator.Features.Orders.Endpoints;
 internal static class ProcessOrder
 {
     internal record Request(
-        int Id,
         string ProductId,
         int Quantity
     );
 
     internal record Response(string? Message, Response.OrderResponse? Order)
     {
-        public record OrderResponse(
-            int Id,
-            string ProductId,
-            int Quantity,
-            string Status);
+        public record OrderResponse(string Id);
     };
 
     internal sealed class Validator : Validator<Request>
     {
         public Validator()
         {
-            RuleFor(x => x.Id).GreaterThan(0);
             RuleFor(x => x.ProductId).NotEmpty();
             RuleFor(x => x.Quantity).GreaterThan(0);
         }
@@ -45,14 +39,12 @@ internal static class ProcessOrder
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             var orderRequest = new OrderService.Request(
-                req.Id,
                 req.ProductId,
-                req.Quantity,
-                "Pending");
+                req.Quantity);
 
             var orderResponse = await orderService.CreateAsync(orderRequest, ct);
 
-            if (orderResponse is null)
+            if (orderResponse?.Id is null)
             {
                 var response = new Response("Order creation failed", null);
 
@@ -64,31 +56,27 @@ internal static class ProcessOrder
 
             if (inventoryResponse is null)
             {
-                await orderService.CancelAsync(req.Id, ct);
+                await orderService.CancelAsync(orderResponse.Id, ct);
 
                 var response = new Response("Inventory reservation failed", null);
 
                 await SendAsync(response, 400, ct);
             }
 
-            var paymentRequest = new PaymentService.Request(req.Id, req.Quantity * 10);
+            var paymentRequest = new PaymentService.Request(orderResponse.Id, req.Quantity * 10);
             var paymentResponse = await paymentService.ProcessAsync(paymentRequest, ct);
 
             if (paymentResponse is null)
             {
                 await inventoryService.ReleaseAsync(inventoryRequest, ct);
-                await orderService.CancelAsync(req.Id, ct);
+                await orderService.CancelAsync(orderResponse?.Id ?? string.Empty, ct);
 
                 var response = new Response("Payment processing failed", null);
 
                 await SendAsync(response, 400, ct);
             }
 
-            var orderEndpointResponse = new Response.OrderResponse(
-                req.Id,
-                req.ProductId, 
-                req.Quantity, 
-                "Completed");
+            var orderEndpointResponse = new Response.OrderResponse(orderResponse.Id);
             
             var endpointResponse = new Response(null, orderEndpointResponse);
             
