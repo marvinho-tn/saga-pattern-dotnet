@@ -17,9 +17,7 @@ internal static class Reseerve
         }
     }
 
-    internal record Response(bool Success);
-
-    internal sealed class Endpoint(IMongoDatabase database) : Endpoint<Request, Response>
+    internal sealed class Endpoint(IMongoDatabase database) : Endpoint<Request>
     {
         public override void Configure()
         {
@@ -36,7 +34,7 @@ internal static class Reseerve
 
             if (inventory is null || inventory.Stock < req.Quantity)
             {
-                await SendAsync(new Response(false), 400, ct);
+                await SendAsync(null, 400, ct);
             }
 
             inventory!.Stock -= req.Quantity;
@@ -45,7 +43,7 @@ internal static class Reseerve
                 Builders<Domain.Inventory>.Update.Set(i => i.Stock, inventory.Stock),
                 cancellationToken: ct);
 
-            await SendOkAsync(new Response(true), ct);
+            await SendNoContentAsync(ct);
         }
     }
 }

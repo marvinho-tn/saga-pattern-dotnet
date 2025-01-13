@@ -43,41 +43,40 @@ internal static class ProcessOrder
                 req.Quantity);
 
             var orderResponse = await orderService.CreateAsync(orderRequest, ct);
-
-            if (orderResponse?.Id is null)
+            
+            if (!orderResponse.IsSuccessResponse)
             {
                 var response = new Response("Order creation failed", null);
 
                 await SendAsync(response, 400, ct);
             }
-
+            
             var inventoryRequest = new InventoryService.Request(req.ProductId, req.Quantity);
             var inventoryResponse = await inventoryService.ReserveAsync(inventoryRequest, ct);
 
-            if (inventoryResponse is null)
+            if (!inventoryResponse.IsSuccessResponse)
             {
-                await orderService.CancelAsync(orderResponse.Id, ct);
+                await orderService.CancelAsync(orderResponse.Obj.Id, ct);
 
                 var response = new Response("Inventory reservation failed", null);
 
                 await SendAsync(response, 400, ct);
             }
 
-            var paymentRequest = new PaymentService.Request(orderResponse.Id, req.Quantity * 10);
+            var paymentRequest = new PaymentService.Request(orderResponse.Obj.Id, req.Quantity * 10);
             var paymentResponse = await paymentService.ProcessAsync(paymentRequest, ct);
 
-            if (paymentResponse is null)
+            if (!paymentResponse.IsSuccessResponse)
             {
                 await inventoryService.ReleaseAsync(inventoryRequest, ct);
-                await orderService.CancelAsync(orderResponse?.Id ?? string.Empty, ct);
+                await orderService.CancelAsync(orderResponse.Obj.Id, ct);
 
                 var response = new Response("Payment processing failed", null);
 
                 await SendAsync(response, 400, ct);
             }
 
-            var orderEndpointResponse = new Response.OrderResponse(orderResponse.Id);
-            
+            var orderEndpointResponse = new Response.OrderResponse(orderResponse.Obj.Id);
             var endpointResponse = new Response(null, orderEndpointResponse);
             
             await SendOkAsync(endpointResponse, ct);

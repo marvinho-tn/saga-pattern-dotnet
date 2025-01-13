@@ -1,21 +1,22 @@
+using Orchestrator.Http;
 using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
-public static class OrderService
+internal static class OrderService
 {
-    public record Response(string Id);
+    internal record Response(string Id);
     
-    public record Request(
+    internal record Request(
         string ProductId,
         int Quantity);
 
-    public interface IService
+    internal interface IService
     {
         [Post("/orders")]
-        Task<Response?> CreateAsync(Request req, CancellationToken ct);
+        Task<BaseResponse<Response>> CreateAsync(Request req, CancellationToken ct);
         
         [Delete("/orders/{id}")]
-        Task<Response?> CancelAsync(string id, CancellationToken ct);
+        Task<BaseResponse> CancelAsync(string id, CancellationToken ct);
     }
 }

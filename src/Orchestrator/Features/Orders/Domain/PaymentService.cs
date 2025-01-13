@@ -1,16 +1,15 @@
+using Orchestrator.Http;
 using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
-public static class PaymentService
+internal static class PaymentService
 {
-    public record Response();
+    internal record Request(string OrderId, int Amount);
     
-    public record Request(string OrderId, int Amount);
-    
-    public interface IService
+    internal interface IService
     {
         [Post("/payments")]
-        Task<Response?> ProcessAsync(Request request, CancellationToken ct);
+        Task<BaseResponse> ProcessAsync(Request request, CancellationToken ct);
     }
 }

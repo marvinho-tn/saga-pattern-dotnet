@@ -1,19 +1,18 @@
+using Orchestrator.Http;
 using Refit;
 
 namespace Orchestrator.Features.Orders.Domain;
 
-public static class InventoryService
+internal static class InventoryService
 {
-    public record Response();
+    internal record Request(string ProductId, int Quantity);
     
-    public record Request(string ProductId, int Quantity);
-    
-    public interface IService
+    internal interface IService
     {
         [Post("/inventory/reserve")]
-        public Task<Response?> ReserveAsync(Request req, CancellationToken ct);
+        public Task<BaseResponse> ReserveAsync(Request req, CancellationToken ct);
         
         [Post("/inventory/release")]
-        public Task<Response?> ReleaseAsync(Request req, CancellationToken ct);
+        public Task<BaseResponse> ReleaseAsync(Request req, CancellationToken ct);
     }
 }

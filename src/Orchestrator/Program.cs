@@ -1,25 +1,18 @@
 using FastEndpoints;
 using Orchestrator;
 using Orchestrator.Features.Orders.Domain;
+using Orchestrator.Http;
 using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddFastEndpoints();
 
-var apisConfig = builder.Configuration.GetSection("Apis").Get<ApisConfig>();
+var apisConfig = builder.Configuration.GetRequiredSection("Apis").Get<ApisConfig>();
 
-builder.Services
-    .AddRefitClient<OrderService.IService>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri(apisConfig?.Order.Url ?? string.Empty));
-
-builder.Services
-    .AddRefitClient<InventoryService.IService>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri(apisConfig?.Inventory.Url ?? string.Empty));
-
-builder.Services
-    .AddRefitClient<PaymentService.IService>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri(apisConfig?.Payment.Url ?? string.Empty));
+builder.Services.AddCustomRefitClient<OrderService.IService>(apisConfig!.Order.Url);
+builder.Services.AddCustomRefitClient<InventoryService.IService>(apisConfig.Inventory.Url);
+builder.Services.AddCustomRefitClient<PaymentService.IService>(apisConfig.Payment.Url);
 
 var app = builder.Build();
 

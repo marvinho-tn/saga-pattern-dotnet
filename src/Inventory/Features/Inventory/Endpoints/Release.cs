@@ -16,10 +16,8 @@ internal static class Release
             RuleFor(x => x.Quantity).GreaterThan(0);
         }
     }
-
-    internal record Response(bool Success);
     
-    internal sealed class Endpoint(IMongoDatabase database) : Endpoint<Request, Response>
+    internal sealed class Endpoint(IMongoDatabase database) : Endpoint<Request>
     {
         public override void Configure()
         {
@@ -36,7 +34,7 @@ internal static class Release
 
             if (inventory is null || inventory.Stock < req.Quantity)
             {
-                await SendAsync(new Response(false), 400, ct);
+                await SendAsync(null, 400, ct);
             }
 
             inventory!.Stock += req.Quantity;
@@ -45,7 +43,7 @@ internal static class Release
                 Builders<Domain.Inventory>.Update.Set(i => i.Stock, inventory.Stock),
                 cancellationToken: ct);
 
-            await SendOkAsync(new Response(true), ct);
+            await SendNoContentAsync(ct);
         }
     }
 }
