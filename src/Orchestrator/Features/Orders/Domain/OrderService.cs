@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Orchestrator.Features.Orders;
+namespace Orchestrator.Features.Orders.Domain;
 
 public static class OrderService
 {

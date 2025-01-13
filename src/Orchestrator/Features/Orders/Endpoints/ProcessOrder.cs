@@ -1,9 +1,8 @@
 using FastEndpoints;
 using FluentValidation;
-using Orchestrator.Features.Inventories;
-using Orchestrator.Features.Payments;
+using Orchestrator.Features.Orders.Domain;
 
-namespace Orchestrator.Features.Orders;
+namespace Orchestrator.Features.Orders.Endpoints;
 
 internal static class ProcessOrder
 {
