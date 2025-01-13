@@ -4,13 +4,13 @@ using MongoDB.Driver;
 
 namespace Inventory.Features.Inventory.Endpoints;
 
-internal static class Reseerve
+internal static class Release
 {
     internal record Request(string ProductId, int Quantity);
-
-    internal sealed class Validator : Validator<Request>
+    
+    internal sealed class Valdator : Validator<Request>
     {
-        public Validator()
+        public Valdator()
         {
             RuleFor(x => x.ProductId).NotEmpty();
             RuleFor(x => x.Quantity).GreaterThan(0);
@@ -18,12 +18,12 @@ internal static class Reseerve
     }
 
     internal record Response(bool Success);
-
+    
     internal sealed class Endpoint(IMongoDatabase database) : Endpoint<Request, Response>
     {
         public override void Configure()
         {
-            Post("inventory/reserve");
+            Post("inventory/release");
             AllowAnonymous();
         }
 
@@ -39,7 +39,7 @@ internal static class Reseerve
                 await SendAsync(new Response(false), 400, ct);
             }
 
-            inventory!.Stock -= req.Quantity;
+            inventory!.Stock += req.Quantity;
 
             await collection.FindOneAndUpdateAsync(i => i.ProductId == inventory.ProductId,
                 Builders<Domain.Inventory>.Update.Set(i => i.Stock, inventory.Stock),

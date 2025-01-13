@@ -6,3 +6,12 @@ Content-Type: application/json
   "ProductId": "P12345",
   "Quantity": 10
 }
+
+### Release Inventory Item
+POST {{base_url}}/inventory/release
+Content-Type: application/json
+
+{
+  "ProductId": "P12345",
+  "Quantity": 10
+}
