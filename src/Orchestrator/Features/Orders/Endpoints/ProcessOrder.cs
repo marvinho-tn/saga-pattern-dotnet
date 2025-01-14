@@ -11,10 +11,9 @@ internal static class ProcessOrder
         int Quantity
     );
 
-    internal record Response(string? Message, Response.OrderResponse? Order)
-    {
-        public record OrderResponse(string Id);
-    };
+    internal record ResponseError(string Message);
+
+    internal record Response(string Id);
 
     internal sealed class Validator : Validator<Request>
     {
@@ -43,27 +42,27 @@ internal static class ProcessOrder
                 req.Quantity);
 
             var orderResponse = await orderService.CreateAsync(orderRequest, ct);
-            
+
             if (!orderResponse.IsSuccessResponse)
             {
-                var response = new Response("Order creation failed", null);
+                var response = new ResponseError("Order creation failed");
 
                 await SendAsync(response, 400, ct);
             }
-            
+
             var inventoryRequest = new InventoryService.Request(req.ProductId, req.Quantity);
             var inventoryResponse = await inventoryService.ReserveAsync(inventoryRequest, ct);
 
             if (!inventoryResponse.IsSuccessResponse)
             {
-                await orderService.CancelAsync(orderResponse.Obj.Id, ct);
+                await orderService.CancelAsync(orderResponse.Obj!.Id, ct);
 
-                var response = new Response("Inventory reservation failed", null);
+                var response = new ResponseError("Inventory reservation failed");
 
                 await SendAsync(response, 400, ct);
             }
 
-            var paymentRequest = new PaymentService.Request(orderResponse.Obj.Id, req.Quantity * 10);
+            var paymentRequest = new PaymentService.Request(orderResponse.Obj!.Id, req.Quantity * 10);
             var paymentResponse = await paymentService.ProcessAsync(paymentRequest, ct);
 
             if (!paymentResponse.IsSuccessResponse)
@@ -71,14 +70,13 @@ internal static class ProcessOrder
                 await inventoryService.ReleaseAsync(inventoryRequest, ct);
                 await orderService.CancelAsync(orderResponse.Obj.Id, ct);
 
-                var response = new Response("Payment processing failed", null);
+                var response = new ResponseError("Payment processing failed");
 
                 await SendAsync(response, 400, ct);
             }
 
-            var orderEndpointResponse = new Response.OrderResponse(orderResponse.Obj.Id);
-            var endpointResponse = new Response(null, orderEndpointResponse);
-            
+            var endpointResponse = new Response(orderResponse.Obj.Id);
+
             await SendOkAsync(endpointResponse, ct);
         }
     }

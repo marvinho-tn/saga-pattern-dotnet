@@ -5,13 +5,13 @@ namespace Orchestrator.Http;
 
 public class BaseResponse
 {
-    public bool IsSuccessResponse { get; set; }
-    public object Obj { get; set; }
+    public required bool IsSuccessResponse { get; set; }
+    public object? Obj { get; set; }
 }
 
 public class BaseResponse<T> : BaseResponse
 {
-    public new T Obj { get; set; }
+    public new T? Obj { get; set; }
 }
 
 public class CustomExceptionHandler : DelegatingHandler
@@ -21,14 +21,14 @@ public class CustomExceptionHandler : DelegatingHandler
         InnerHandler = innerHandler;
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        System.Threading.CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var response = await base.SendAsync(request, cancellationToken);
+        var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
         var content = new BaseResponse
         {
             IsSuccessResponse = response.IsSuccessStatusCode,
-            Obj = await response.Content.ReadAsStringAsync(cancellationToken)
+            Obj = !string.IsNullOrEmpty(responseString) ? JsonSerializer.Deserialize<object>(responseString) : null
         };
 
         response.EnsureSuccessStatusCode();
