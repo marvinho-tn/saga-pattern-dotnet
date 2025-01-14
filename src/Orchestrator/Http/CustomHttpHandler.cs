@@ -14,9 +14,9 @@ public class BaseResponse<T> : BaseResponse
     public new T? Obj { get; set; }
 }
 
-public class CustomExceptionHandler : DelegatingHandler
+public class CustomHttpHandler : DelegatingHandler
 {
-    public CustomExceptionHandler(HttpMessageHandler innerHandler)
+    public CustomHttpHandler(HttpMessageHandler innerHandler)
     {
         InnerHandler = innerHandler;
     }
@@ -53,7 +53,7 @@ public static class HttpExtensions
 
                 return new RefitSettings
                 {
-                    HttpMessageHandlerFactory = () => new CustomExceptionHandler(handler)
+                    HttpMessageHandlerFactory = () => new CustomHttpHandler(handler)
                 };
             })
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
