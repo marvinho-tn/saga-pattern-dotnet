@@ -27,6 +27,7 @@ internal static class ReserveAbortedConsumer
                 if (consumeResult.Message.Value is not null)
                 {
                     var message = consumeResult.Message.Value;
+                    
                     var request = new InventoryService.Request(message.OrderId, message.ProductId, message.Quantity);
 
                     var response = await inventoryService.ReleaseAsync(request, stoppingToken);
