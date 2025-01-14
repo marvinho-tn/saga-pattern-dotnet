@@ -1,6 +1,6 @@
 using FastEndpoints;
 using MongoDB.Driver;
-using Order.Features.Order.Handlers;
+using Order.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,9 +1,9 @@
 using Confluent.Kafka;
 using FastEndpoints;
 using Orchestrator;
-using Orchestrator.Features.Orders.Consumers;
-using Orchestrator.Features.Orders.Domain;
-using Orchestrator.Features.Orders.Handlers;
+using Orchestrator.Consumers;
+using Orchestrator.Domain;
+using Orchestrator.Handlers;
 using Orchestrator.Http;
 using Refit;
 

@@ -1,5 +1,5 @@
 using FastEndpoints;
-using Inventory.Features.Inventory.Handlers;
+using Inventory.Handlers;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
