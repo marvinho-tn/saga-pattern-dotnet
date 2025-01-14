@@ -1,18 +1,19 @@
 using Common.Serialization;
 using Confluent.Kafka;
-using Orchestrator.Domain;
-using Orchestrator.Handlers;
+using Worker.Domain;
 
-namespace Orchestrator.Consumers;
+namespace Worker.Consumers;
 
 internal static class OrderRegisteredConsumer
 {
+    internal record Message(string ProductId, int Quantity);
+
     internal sealed class Consumer(ConsumerConfig consumerConfig, OrderService.IService orderService)
         : BackgroundService
     {
-        private readonly IConsumer<string, OrderRegisteredEventHandler.Event> _consumer =
-            new ConsumerBuilder<string, OrderRegisteredEventHandler.Event>(consumerConfig)
-                .SetValueDeserializer(new CustomJsonSerializer<OrderRegisteredEventHandler.Event>())
+        private readonly IConsumer<string, Message> _consumer =
+            new ConsumerBuilder<string, Message>(consumerConfig)
+                .SetValueDeserializer(new CustomJsonSerializer<Message>())
                 .Build();
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

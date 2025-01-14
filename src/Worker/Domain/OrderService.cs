@@ -1,7 +1,7 @@
-using Orchestrator.Http;
 using Refit;
+using Worker.Http;
 
-namespace Orchestrator.Domain;
+namespace Worker.Domain;
 
 internal static class OrderService
 {

@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using FastEndpoints;
 using MongoDB.Driver;
 using Order.Handlers;
@@ -14,6 +15,8 @@ builder.Services.AddTransient<IMongoDatabase>(sp =>
 
     return client.GetDatabase(databaseName);
 });
+
+builder.Services.AddSingleton(builder.Configuration.GetRequiredSection("Kafka").Get<ProducerConfig>()!);
 
 builder.Services.AddTransient<IEventHandler<OrderCreatedEventHandler.Event>, OrderCreatedEventHandler.Handler>();
 

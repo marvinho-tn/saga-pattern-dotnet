@@ -1,13 +1,13 @@
 using Common.Serialization;
 using Confluent.Kafka;
-using Orchestrator.Domain;
+using Worker.Domain;
 
-namespace Orchestrator.Consumers;
+namespace Worker.Consumers;
 
-internal static class OrderCreatedConsumer
+internal static class ReserveAbortedConsumer
 {
     internal record Message(string OrderId, string ProductId, int Quantity);
-    
+
     internal sealed class InventoryConsumer(ConsumerConfig consumerConfig, InventoryService.IService inventoryService)
         : BackgroundService
     {
@@ -18,7 +18,7 @@ internal static class OrderCreatedConsumer
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _consumer.Subscribe("order-created");
+            _consumer.Subscribe("reserve-aborted");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -27,9 +27,10 @@ internal static class OrderCreatedConsumer
                 if (consumeResult.Message.Value is not null)
                 {
                     var message = consumeResult.Message.Value;
+                    
                     var request = new InventoryService.Request(message.OrderId, message.ProductId, message.Quantity);
 
-                    var response = await inventoryService.ReserveAsync(request, stoppingToken);
+                    var response = await inventoryService.ReleaseAsync(request, stoppingToken);
 
                     if (response.IsSuccessResponse)
                     {
@@ -45,7 +46,7 @@ internal static class OrderCreatedConsumer
             _consumer.Dispose();
         }
     }
-    
+
     internal sealed class PaymentConsumer(ConsumerConfig consumerConfig, PaymentService.IService paymentService)
         : BackgroundService
     {
@@ -56,7 +57,7 @@ internal static class OrderCreatedConsumer
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _consumer.Subscribe("order-created");
+            _consumer.Subscribe("reserve-aborted");
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -65,9 +66,8 @@ internal static class OrderCreatedConsumer
                 if (consumeResult.Message.Value is not null)
                 {
                     var message = consumeResult.Message.Value;
-                    var request = new PaymentService.Request(message.OrderId, message.Quantity * 10);
-
-                    var response = await paymentService.ProcessAsync(request, stoppingToken);
+                    
+                    var response = await paymentService.CancelAsync(message.OrderId, stoppingToken);
 
                     if (response.IsSuccessResponse)
                     {

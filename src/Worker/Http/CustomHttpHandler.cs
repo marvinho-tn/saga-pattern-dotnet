@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Refit;
 
-namespace Orchestrator.Http;
+namespace Worker.Http;
 
 public class BaseResponse
 {

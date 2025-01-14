@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using FastEndpoints;
 using Inventory.Handlers;
 using MongoDB.Driver;
@@ -14,6 +15,8 @@ builder.Services.AddTransient<IMongoDatabase>(sp =>
 
     return client.GetDatabase(databaseName);
 });
+
+builder.Services.AddSingleton(builder.Configuration.GetRequiredSection("Kafka").Get<ProducerConfig>()!);
 
 builder.Services.AddTransient<IEventHandler<ReserveAbortedEventHandler.Event>, ReserveAbortedEventHandler.Handler>();
 
