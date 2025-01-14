@@ -11,5 +11,8 @@ internal static class PaymentService
     {
         [Post("/payments")]
         Task<BaseResponse> ProcessAsync(Request request, CancellationToken ct);
+
+        [Delete("/payments/{orderId}")]
+        Task<BaseResponse> CancelAsync(string orderId, CancellationToken ct);
     }
 }

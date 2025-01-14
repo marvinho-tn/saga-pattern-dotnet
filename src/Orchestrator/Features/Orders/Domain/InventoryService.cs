@@ -5,7 +5,7 @@ namespace Orchestrator.Features.Orders.Domain;
 
 internal static class InventoryService
 {
-    internal record Request(string ProductId, int Quantity);
+    internal record Request(string OrderId, string ProductId, int Quantity);
     
     internal interface IService
     {

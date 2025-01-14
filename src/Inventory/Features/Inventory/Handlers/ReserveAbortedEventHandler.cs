@@ -2,9 +2,9 @@ using Common.Serialization;
 using Confluent.Kafka;
 using FastEndpoints;
 
-namespace Order.Features.Order.Handlers;
+namespace Inventory.Features.Inventory.Handlers;
 
-internal static class OrderCreatedEventHandler
+public static class ReserveAbortedEventHandler
 {
     internal record Event(string OrderId, string ProductId, int Quantity);
     
@@ -22,7 +22,7 @@ internal static class OrderCreatedEventHandler
                 Value = @event
             };
             
-            await producer.ProduceAsync("order-created", message, ct);
+            await producer.ProduceAsync("reserve-aborted", message, ct);
         }
     }
 }

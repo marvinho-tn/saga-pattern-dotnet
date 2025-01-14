@@ -1,12 +1,13 @@
 using FastEndpoints;
 using FluentValidation;
+using Inventory.Features.Inventory.Handlers;
 using MongoDB.Driver;
 
 namespace Inventory.Features.Inventory.Endpoints;
 
 internal static class Release
 {
-    internal record Request(string ProductId, int Quantity);
+    internal record Request(string OrderId, string ProductId, int Quantity);
     
     internal sealed class Valdator : Validator<Request>
     {
@@ -34,6 +35,10 @@ internal static class Release
 
             if (inventory is null || inventory.Stock < req.Quantity)
             {
+                var @event = new ReserveAbortedEventHandler.Event(req.OrderId, req.ProductId, req.Quantity);
+
+                await PublishAsync(@event, cancellation: ct);
+                
                 await SendAsync(null, 400, ct);
             }
 

@@ -1,4 +1,5 @@
 using FastEndpoints;
+using Inventory.Features.Inventory.Handlers;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddTransient<IMongoDatabase>(sp =>
 
     return client.GetDatabase(databaseName);
 });
+
+builder.Services.AddTransient<IEventHandler<ReserveAbortedEventHandler.Event>, ReserveAbortedEventHandler.Handler>();
 
 var app = builder.Build();
 

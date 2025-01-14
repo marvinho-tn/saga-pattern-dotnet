@@ -7,6 +7,7 @@ namespace Orchestrator.Features.Orders.Endpoints;
 internal static class ProcessOrder
 {
     internal record Request(
+        string OrderId,
         string ProductId,
         int Quantity
     );
@@ -50,7 +51,7 @@ internal static class ProcessOrder
                 await SendAsync(response, 400, ct);
             }
 
-            var inventoryRequest = new InventoryService.Request(req.ProductId, req.Quantity);
+            var inventoryRequest = new InventoryService.Request(req.OrderId, req.ProductId, req.Quantity);
             var inventoryResponse = await inventoryService.ReserveAsync(inventoryRequest, ct);
 
             if (!inventoryResponse.IsSuccessResponse)

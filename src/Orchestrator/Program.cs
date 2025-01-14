@@ -25,6 +25,8 @@ builder.Services.AddTransient<IEventHandler<OrderRegisteredEventHandler.Event>, 
 builder.Services.AddHostedService<OrderRegisteredConsumer.Consumer>();
 builder.Services.AddHostedService<OrderCreatedConsumer.InventoryConsumer>();
 builder.Services.AddHostedService<OrderCreatedConsumer.PaymentConsumer>();
+builder.Services.AddHostedService<ReserveAbortedConsumer.InventoryConsumer>();
+builder.Services.AddHostedService<ReserveAbortedConsumer.PaymentConsumer>();
 
 var app = builder.Build();
 

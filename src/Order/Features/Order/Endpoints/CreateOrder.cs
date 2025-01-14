@@ -43,7 +43,7 @@ internal static class CreateOrder
             
             await ordersCollection.InsertOneAsync(order, cancellationToken: ct);
 
-            var @event = new OrderCreatedEventHandler.Event(order.Id!);
+            var @event = new OrderCreatedEventHandler.Event(order.Id!, order.ProductId, order.Quantity);
             
             await PublishAsync(@event, cancellation: ct);
             
