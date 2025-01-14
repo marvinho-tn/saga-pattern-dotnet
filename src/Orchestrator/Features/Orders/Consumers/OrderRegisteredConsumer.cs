@@ -1,7 +1,7 @@
+using Common.Serialization;
 using Confluent.Kafka;
 using Orchestrator.Features.Orders.Domain;
 using Orchestrator.Features.Orders.Handlers;
-using Orchestrator.Serialization;
 
 namespace Orchestrator.Features.Orders.Consumers;
 

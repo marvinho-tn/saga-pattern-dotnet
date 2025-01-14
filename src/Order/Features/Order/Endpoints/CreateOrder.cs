@@ -1,6 +1,7 @@
 using FastEndpoints;
 using FluentValidation;
 using MongoDB.Driver;
+using Order.Features.Order.Handlers;
 
 namespace Order.Features.Order.Endpoints;
 
@@ -41,6 +42,10 @@ internal static class CreateOrder
             };
             
             await ordersCollection.InsertOneAsync(order, cancellationToken: ct);
+
+            var @event = new OrderCreatedEventHandler.Event(order.Id!);
+            
+            await PublishAsync(@event, cancellation: ct);
             
             var response = new Response(order.Id!);
             

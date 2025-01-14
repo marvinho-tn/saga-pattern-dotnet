@@ -2,11 +2,11 @@ using Common.Serialization;
 using Confluent.Kafka;
 using FastEndpoints;
 
-namespace Orchestrator.Features.Orders.Handlers;
+namespace Order.Features.Order.Handlers;
 
-internal static class OrderRegisteredEventHandler
+internal static class OrderCreatedEventHandler
 {
-    internal record Event(string ProductId, int Quantity);
+    internal record Event(string OrderId);
     
     internal class Handler(ProducerConfig producerConfig) : IEventHandler<Event>
     {
@@ -22,7 +22,7 @@ internal static class OrderRegisteredEventHandler
                 Value = @event
             };
             
-            await producer.ProduceAsync("order-registered", message, ct);
+            await producer.ProduceAsync("order-created", message, ct);
         }
     }
 }

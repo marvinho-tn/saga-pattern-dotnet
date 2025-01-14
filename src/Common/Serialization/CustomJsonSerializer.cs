@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Confluent.Kafka;
 
-namespace Orchestrator.Serialization;
+namespace Common.Serialization;
 
 public class CustomJsonSerializer<T> : ISerializer<T>, IDeserializer<T>
 {

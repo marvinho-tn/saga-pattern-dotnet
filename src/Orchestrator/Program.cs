@@ -23,6 +23,8 @@ builder.Services.AddSingleton(builder.Configuration.GetRequiredSection("Kafka").
 builder.Services.AddTransient<IEventHandler<OrderRegisteredEventHandler.Event>, OrderRegisteredEventHandler.Handler>();
 
 builder.Services.AddHostedService<OrderRegisteredConsumer.Consumer>();
+builder.Services.AddHostedService<OrderCreatedConsumer.InventoryConsumer>();
+builder.Services.AddHostedService<OrderCreatedConsumer.PaymentConsumer>();
 
 var app = builder.Build();
 
