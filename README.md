@@ -19,7 +19,6 @@ O projeto é composto por vários microsserviços que se comunicam entre si util
 1. **Order Service**: Responsável pela criação e gerenciamento de pedidos.
 2. **Payment Service**: Gerencia o processamento de pagamentos.
 3. **Inventory Service**: Cuida da gestão de estoque e reserva de produtos.
-4. **Shipping Service**: Gerencia o envio dos pedidos.
 
 ### Fluxo do Pedido
 
