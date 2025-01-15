@@ -7,7 +7,7 @@ internal static class PaymentService
 {
     internal record Request(string OrderId, int Amount);
     
-    internal interface IService
+    internal interface Service
     {
         [Post("/payments")]
         Task<BaseResponse> ProcessAsync(Request request, CancellationToken ct);

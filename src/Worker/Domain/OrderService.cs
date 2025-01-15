@@ -11,7 +11,7 @@ internal static class OrderService
         string ProductId,
         int Quantity);
 
-    internal interface IService
+    internal interface Service
     {
         [Post("/orders")]
         Task<BaseResponse<Response>> CreateAsync(Request req, CancellationToken ct);

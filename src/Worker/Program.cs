@@ -10,9 +10,9 @@ var apisConfig = builder.Configuration.GetRequiredSection("Apis").Get<ApisConfig
 
 builder.Services.AddSingleton(builder.Configuration.GetRequiredSection("Kafka").Get<ConsumerConfig>()!);
 
-builder.Services.AddCustomRefitClient<OrderService.IService>(apisConfig!.Order.Url);
-builder.Services.AddCustomRefitClient<InventoryService.IService>(apisConfig.Inventory.Url);
-builder.Services.AddCustomRefitClient<PaymentService.IService>(apisConfig.Payment.Url);
+builder.Services.AddCustomRefitClient<OrderService.Service>(apisConfig!.Order.Url);
+builder.Services.AddCustomRefitClient<InventoryService.Service>(apisConfig.Inventory.Url);
+builder.Services.AddCustomRefitClient<PaymentService.Service>(apisConfig.Payment.Url);
 
 builder.Services.AddHostedService<OrderRegisteredConsumer.Consumer>();
 builder.Services.AddHostedService<OrderCreatedConsumer.InventoryConsumer>();

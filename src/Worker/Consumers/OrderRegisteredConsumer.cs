@@ -8,13 +8,21 @@ internal static class OrderRegisteredConsumer
 {
     internal record Message(string ProductId, int Quantity);
 
-    internal sealed class Consumer(ConsumerConfig consumerConfig, OrderService.IService orderService)
-        : BackgroundService
+    internal sealed class Consumer : BackgroundService
     {
-        private readonly IConsumer<string, Message> _consumer =
-            new ConsumerBuilder<string, Message>(consumerConfig)
+        private readonly OrderService.Service _orderService;
+        private readonly IConsumer<string, Message> _consumer;
+
+        public Consumer(ConsumerConfig consumerConfig, OrderService.Service orderService)
+        {
+            _orderService = orderService;
+
+            consumerConfig.GroupId = "order-group";
+
+            _consumer = new ConsumerBuilder<string, Message>(consumerConfig)
                 .SetValueDeserializer(new CustomJsonSerializer<Message>())
                 .Build();
+        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -29,7 +37,7 @@ internal static class OrderRegisteredConsumer
                     var message = consumeResult.Message.Value;
                     var request = new OrderService.Request(message.ProductId, message.Quantity);
 
-                    var response = await orderService.CreateAsync(request, stoppingToken);
+                    var response = await _orderService.CreateAsync(request, stoppingToken);
 
                     if (response.IsSuccessResponse)
                     {
