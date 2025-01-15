@@ -41,3 +41,19 @@ O projeto é composto por vários microsserviços que se comunicam entre si util
 1. Clone o repositório:
    ```bash
    git clone https://github.com/marvinho-tn/saga-pattern-dotnet.git
+
+2. Navegue até o diretório do projeto:
+
+   ```bash
+   cd saga-pattern-dotnet
+   
+3. Configure as conexões com Apache Kafka e MongoDB nos arquivos de configuração dos microsserviços.
+
+Execute os microsserviços:
+
+   ```bash
+   dotnet run --project Order
+   dotnet run --project Payment
+   dotnet run --project Inventory
+   dotnet run --project Worker
+   dotnet run --project Orchestrator
